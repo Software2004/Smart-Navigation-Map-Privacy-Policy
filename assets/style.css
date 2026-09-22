@@ -14,6 +14,7 @@
     --trail-green-dim:#DCF3E7;
     --signal-amber:#F2A93B;
     --signal-amber-dim:#FBEBD2;
+    --topbar-h:52px;
 
     --font-display:'Space Grotesk', sans-serif;
     --font-body:'Inter', sans-serif;
@@ -26,7 +27,10 @@
   }
 
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth; scroll-padding-top:90px;}
+  /* scroll-behavior is toggled on briefly by script.js for anchor-link clicks only —
+     left on sitewide, it fights rapid wheel/trackpad input and makes ordinary
+     scrolling feel like it stalls or "sticks" every few ticks. */
+  html{scroll-padding-top:90px;}
   body{
     margin:0;
     background:var(--paper);
@@ -57,8 +61,11 @@
   /* ===== Sticky compact bar ===== */
   .topbar{
     position:fixed; top:0; left:0; right:0; z-index:100;
-    background:rgba(14,26,38,0.96);
-    backdrop-filter:blur(6px);
+    /* Solid, not blurred: backdrop-filter recomputes every scroll frame, and
+       stacked with the chip strip's own blur below 880px it was heavy enough
+       to visibly stall scrolling. The bar is already ~96% opaque, so blur
+       added negligible visual effect for real perf cost. */
+    background:#0E1A26;
     border-bottom:1px solid rgba(255,255,255,0.08);
     transform:translateY(-100%);
     transition:transform .35s ease;
@@ -320,8 +327,10 @@
     .layout{ grid-template-columns:1fr; gap:0; padding:0 20px; }
     .route-rail{ display:none; }
     .mobile-route{
-      display:block; position:sticky; top:0; z-index:90;
-      background:rgba(243,245,242,0.94); backdrop-filter:blur(6px);
+      display:block; position:sticky; top:var(--topbar-h); z-index:90;
+      /* Solid, not blurred — see the .topbar comment above; this bar sits
+         directly under the topbar's, so the two blurs used to stack. */
+      background:var(--paper);
       margin:0 -20px 8px; padding:12px 0; border-bottom:1px solid var(--line);
     }
     .mobile-route ol{
